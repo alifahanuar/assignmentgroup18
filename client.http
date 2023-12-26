@@ -23,11 +23,11 @@ Content-Type: application/json
 ###Create a visitor###
 POST http://localhost:1999/visitorData
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTg5Mzg5ODAxZWY3ZDRjMDNiYjcwMTciLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIxMjM0NSIsImlhdCI6MTcwMzQ5MzYwN30.e1qVSu_h8oXJ4Rls5jB1LdLuH3xuXLMoN7CNi2zYzRM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NThiMDQ0YzZjY2ExNDE2ZDkzNTBlNjkiLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIxMjM0NSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MDM2MDk3MzZ9.BVAsieYF5NhEQ1Oinscl9nfl5BYJFnPoS2KMhAstLfQ
 
 {
 "visitorID": "V11",
-"vistorname": "aisyah",
+"visitorName": "aisyah",
 "phoneNumber": "0132457286",
 "age": "23",
 "gender": "female",
@@ -43,16 +43,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTg5Mzg5O
 ###ISSUE PASS###
 POST http://localhost:1999/issuepass
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTg5Mzg5ODAxZWY3ZDRjMDNiYjcwMTciLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIxMjM0NSIsImlhdCI6MTcwMzQ5NjE3M30.xNbBurdgpqtj7JysXfBZkjGs7AWW4CfUAlDOZ7ujbzc
+Authorization: Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NThiMDQ0YzZjY2ExNDE2ZDkzNTBlNjkiLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIxMjM0NSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MDM2MDk4NDJ9.4N-Xg2HXFBFtHgJa62i4vBCfVNAgV1_uaZ26KyG9rJ8
 
 {
-    "_Id": "658951269fe4fd9f11d4c43e",
+    "_Id": "658b063ab67fb6bc284fb1ea",
     "issuedBy": "admin",
     "validUntil": "2023-12-25T09:08:06.457Z"
 }
 
 ###RETRIEVE PASS###    //_id
-GET http://localhost:1999/retrievepass/658951269fe4fd9f11d4c43e
+GET http://localhost:1999/retrievepass/658b05f832b98b458ffe17de
 
 
 

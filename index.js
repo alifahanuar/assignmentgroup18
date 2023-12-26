@@ -6,8 +6,15 @@ const app = express();
 const port = process.env.PORT || 1999; 
 const jwt = require('jsonwebtoken'); 
 const MongoURI = process.env.MONGODB_URI
+const bodyParser = require('body-parser');
+const ejs = require('ejs');
 
 app.use(express.json()); 
+
+// Set up middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+
 
 // Swagger options
 const options = {
@@ -41,13 +48,22 @@ const options = {
   };
   
   const swaggerSpec = swaggerJSDoc(options);
+
+  // Dummy user data (replace with a proper authentication system)
+const users = [
+    { username: 'user1', password: 'password1' },
+    { username: 'user2', password: 'password2' },
+  ];
+  
+  
+
   
   // Serve Swagger documentation
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // MongoDB connection URL 
 const uri = 
-'mongodb+srv://Alifah:FXwzuFbI9bOat0w6@cluster0.ali2uob.mongodb.net/VisitorManagement'; 
+'mongodb+srv://alfhanuar:AwiVGJjZJAW5vaFc@cluster0.y7nkbk7.mongodb.net/VisitorManagement'; 
 // Create a new MongoClient 
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }); 
@@ -132,6 +148,11 @@ function verifyToken(req, res, next) {
   }); 
 } 
  
+
+// Routes
+app.get('/', (req, res) => {
+    res.render('login');
+  })
 
 /**
  * @swagger
@@ -337,6 +358,11 @@ app.post('/visitorData', verifyToken, (req, res) => {
  *         name: Authorization
  *         required: true
  *         description: Bearer token for authentication
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: _id
+ *         required: true
  *         schema:
  *           type: string
  *     requestBody:
