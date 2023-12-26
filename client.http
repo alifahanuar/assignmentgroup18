@@ -9,6 +9,16 @@ Content-Type: application/json
 "email": "alifah@gmail.com"
 }
 
+###REGISTER ADMIN###
+POST http://localhost:1999/registeradmin
+Content-Type: application/json
+
+{
+"username": "admin",
+"password": "12345",
+"name": "alifah",
+"email": "alifah@gmail.com"
+}
 
 ###LOGIN USER###
 POST http://localhost:1999/login
@@ -20,7 +30,7 @@ Content-Type: application/json
 }
 
 ###LOGIN ADMIN###
-GET  http://localhost:1999/login/user
+GET  http://localhost:1999/login
 Content-Type: application/json
 
 {

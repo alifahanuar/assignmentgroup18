@@ -229,19 +229,20 @@ app.post('/registeradmin', (req, res) => {
  *     description: User Authentication.
  *     tags:
  *       - Authentication
- *     requestbody:
+ *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - username
+ *               - password
  *             properties:
  *               username:
  *                 type: string
- *                 description: User's username
  *               password:
  *                 type: string
- *                 description: User's password
  *     responses:
  *       '200':
  *         description: Successful login
@@ -291,7 +292,7 @@ app.post('/login', (req, res) => {
  */
 
 
-app.get('/loginadmin', (req, res) => {
+app.post('/loginadmin', (req, res) => {
     const { username, password } = req.body;
   
     // Dummy authentication (replace with a proper authentication system)
