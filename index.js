@@ -231,36 +231,28 @@ app.post('/registeradmin', (req, res) => {
  *       - Authentication
  *     requestbody:
  *       required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  description: User's username
-                password:
-                  type: string
-                  description: User's password
-      responses:
-        '200':
-          description: Successful login
-          content:
-            application/json:
-              example:
-                token: "your_access_token"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              example:
-                error: "Invalid credentials"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              example:
-                error: "An error occurred during login"
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: User's username
+ *               password:
+ *                 type: string
+ *                 description: User's password
+ *     responses:
+ *       '200':
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             example:
+ *               token: "your_access_token"
+ *       '401':
+ *         description: Unauthorized
+ *       '500':
+ *         description: "An error occurred during login"
  */
 
 // Login route 
@@ -293,13 +285,13 @@ app.post('/login', (req, res) => {
  *       201:
  *         description: Provide Message
  *        content:
-            application/json:
-              example:
-                message: "Copy and navigate to this link "
+ *           application/json:
+ *             example:
+ *               message: "Copy and navigate to this link "
  */
 
 
-app.post('/loginadmin', (req, res) => {
+app.get('/loginadmin', (req, res) => {
     const { username, password } = req.body;
   
     // Dummy authentication (replace with a proper authentication system)
