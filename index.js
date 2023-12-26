@@ -149,38 +149,6 @@ function verifyToken(req, res, next) {
 } 
  
 
-/**
- * @swagger
- * /register:
- *   post:
- *     summary: Admin Registration
- *     description: Registers a new admin.
- *     tags:
- *       - V
- *     parameters:
- *       - name: username
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         in: formData
- *         required: true
- *         type: string
- *       - name: name
- *         in: formData
- *         required: true
- *         type: string
- *       - name: email
- *         in: formData
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: Registration of new admin is successfully.
- *       500:
- *         description: An error occurred during registration.
- */
-
  
 // Register route 
 app.post('/register', (req, res) => { 
@@ -214,11 +182,7 @@ app.post('/register', (req, res) => {
  *         type: string
  *     responses:
  *       200:
- *         description: Login successfully.
- *       401:
- *         description: Invalid credentials
- *       500:
- *         description: Internal Server Error
+ *         description: Copy and navigate to this link https://https://isgroup18.azurewebsites.net/login
  */
 
 // Login route 
