@@ -19,6 +19,14 @@ Content-Type: application/json
 "password": "12345"
 }
 
+###LOGIN ADMIN###
+GET  http://localhost:1999/login/user
+Content-Type: application/json
+
+{
+"username": "admin",
+"password": "12345"
+}
 
 ###Create a visitor###
 POST http://localhost:1999/visitorData

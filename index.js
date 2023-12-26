@@ -50,9 +50,8 @@ const options = {
   const swaggerSpec = swaggerJSDoc(options);
 
   // Dummy user data (replace with a proper authentication system)
-const users = [
+const admins = [
     { username: 'user1', password: 'password1' },
-    { username: 'user2', password: 'password2' },
   ];
   
   
@@ -80,6 +79,7 @@ console.error('Error connecting to MongoDB:', error);
 const db = client.db('VisitorManagement'); 
 // const usersCollection = db.collection('users'); 
 const visitorsCollection = db.collection('visitors'); 
+const usersCollection = db.collection('users'); 
 const securityCollection = db.collection('security'); 
 const hostelCollection = db.collection('hostel'); 
 const blockCollection = db.collection('block'); 
@@ -149,11 +149,6 @@ function verifyToken(req, res, next) {
 } 
  
 
-// Routes
-app.get('/', (req, res) => {
-    res.render('login');
-  })
-
 /**
  * @swagger
  * /register:
@@ -161,7 +156,7 @@ app.get('/', (req, res) => {
  *     summary: Admin Registration
  *     description: Registers a new admin.
  *     tags:
- *       - Administrator
+ *       - V
  *     parameters:
  *       - name: username
  *         in: formData
@@ -207,7 +202,7 @@ app.post('/register', (req, res) => {
  *     summary:  Admin Login
  *     description: Logs in a admin.
  *     tags:
- *       - Administrator
+ *       - Authentication
  *     parameters:
  *       - name: username
  *         in: formData
@@ -251,7 +246,7 @@ app.post('/login', (req, res) => {
  *     summary: Create a visitor
  *     description: Create a New Visitor
  *     tags:
- *       - Visitors
+ *       - Visitors Management
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -350,16 +345,8 @@ app.post('/visitorData', verifyToken, (req, res) => {
  *     summary: Issue a visitor pass
  *     description: To issue a visitor pass.
  *     tags:
- *       - Visitor Pass
- *     security:
- *       - bearerAuth: []
+ *       - Administrator Management
  *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         description: Bearer token for authentication
- *         schema:
- *           type: string
  *       - in: path
  *         name: _id
  *         required: true
@@ -368,7 +355,6 @@ app.post('/visitorData', verifyToken, (req, res) => {
  *     requestBody:
  *       description: Visitor pass details
  *       required: true
- 
  *       content:
  *         application/json:
  *           schema:
@@ -420,7 +406,7 @@ app.post('/issuepass', verifyToken, async (req, res) => {
  *     summary: Retrieve a visitor pass
  *     description: To retrieve details of a visitor pass.
  *     tags:
- *       - Visitor Pass
+ *       - Administrator Management
  *     parameters:
  *       - in: path
  *         name: _id
@@ -430,10 +416,25 @@ app.post('/issuepass', verifyToken, async (req, res) => {
  *     responses:
  *       200:
  *         description: Visitor pass retrieved successfully
+ *         content:
+ *          application/json:
+ *            example:
+ *              _id: "123456"
+ *               issuedBy: "John Doe"
+ *               validUntil: "2023-12-31"
+ *               issuedAt: "2023-01-01T12:00:00Z"
  *       404:
  *         description: Visitor pass not found
+ *         content:
+ *          application/json:
+ *            example:
+ *              error: "No pass found for this visitors"
  *       500:
- *         description: An error occurred while retrieving the pass
+ *         description: Internal Server Error
+  *         content:
+ *          application/json:
+ *            example:
+ *              error: "An error occured while retrieving the pass"
  */
 
   // Visitor Retrieve Pass
@@ -462,7 +463,7 @@ app.post('/issuepass', verifyToken, async (req, res) => {
  *     summary: Update a visitor
  *     description: To update details of a visitor.
  *     tags:
- *       - Visitors
+ *       - 
  *     parameters:
  *       - in: path
  *         name: id
@@ -556,7 +557,7 @@ visitorData });
  *     summary: Delete a visitor
  *     description: Use this route to delete a visitor by its ID.
  *     tags:
- *       - Visitors
+ *       - Administrator Management
  *     parameters:
  *       - in: path
  *         name: id
@@ -599,7 +600,7 @@ app.delete('/visitor/:id', verifyToken, async (req, res) => {
  *     summary: Get all visitors
  *     description: To retrieve a list of all visitors.
  *     tags:
- *       - Visitors
+ *       - Administrator Management
  *     parameters:
  *       - in: header
  *         name: Authorization
