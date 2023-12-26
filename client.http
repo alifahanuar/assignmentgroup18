@@ -1,21 +1,21 @@
-###REGISTER ADMIN###
+###REGISTER USER###
 POST http://localhost:1999/register
 Content-Type: application/json
 
 {
-"username": "admin",
+"username": "alifah",
 "password": "12345",
-"name": "Administrator",
-"email": "admin@gmail.com"
+"name": "alifah",
+"email": "alifah@gmail.com"
 }
 
 
-###LOGIN ADMIN###
+###LOGIN USER###
 POST http://localhost:1999/login
 Content-Type: application/json
 
 {
-"username": "admin",
+"username": "alifah",
 "password": "12345"
 }
 

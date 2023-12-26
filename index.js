@@ -52,8 +52,13 @@ const options = {
   // Dummy user data (replace with a proper authentication system)
 const admins = [
     { username: 'user1', password: 'password1' },
+    { username: 'user2', password: 'password2' },
   ];
   
+  // Routes
+app.get('/', (req, res) => {
+    res.render('login');
+  });
   
 
   
@@ -88,6 +93,46 @@ const adminsCollection = db.collection('admins');
 const visitorPassCollection = db.collection('visitorpass');
 
 function login(reqUsername, reqPassword) { 
+    return usersCollection.findOne({ username: reqUsername, password: reqPassword }) 
+      .then(matchUsers => { 
+        if (!matchUsers) { 
+          return { 
+            success: false, 
+            message: "User not found!" 
+          }; 
+        } else { 
+          return { 
+            success: true, 
+            users: matchUsers
+          }; 
+        } 
+      }) 
+      .catch(error => { 
+        console.error('Error in login:', error); 
+        return { 
+          success: false, 
+          message: "An error occurred during login." 
+        }; 
+      }); 
+  } 
+    
+  
+  function register(reqUsername, reqPassword, reqName, reqEmail) { 
+    return usersCollection.insertOne({ 
+      username: reqUsername, 
+      password: reqPassword, 
+      name: reqName, 
+      email: reqEmail 
+    }) 
+      .then(() => { 
+        return "Registration Admin Successful!"; 
+      }) 
+      .catch(error => {      console.error('Error in register:', error); 
+        return "An error occurred during registration."; 
+      }); 
+  } 
+
+function loginAdmins(reqUsername, reqPassword) { 
   return adminsCollection.findOne({ username: reqUsername, password: reqPassword }) 
     .then(matchAdmins => { 
       if (!matchAdmins) { 
@@ -112,7 +157,7 @@ function login(reqUsername, reqPassword) {
 } 
   
 
-function register(reqUsername, reqPassword, reqName, reqEmail) { 
+function registerAdmins(reqUsername, reqPassword, reqName, reqEmail) { 
   return adminsCollection.insertOne({ 
     username: reqUsername, 
     password: reqPassword, 
@@ -148,7 +193,6 @@ function verifyToken(req, res, next) {
   }); 
 } 
  
-
  
 // Register route 
 app.post('/register', (req, res) => { 
@@ -163,26 +207,60 @@ app.post('/register', (req, res) => {
   }); 
 }); 
 
+// Register route 
+app.post('/registeradmin', (req, res) => { 
+    console.log(req.body); 
+   
+    let result = registerAdmins(req.body.username, req.body.password, req.body.name, req.body.email); 
+    result.then(response => { 
+      res.send(response); 
+    }).catch(error => { 
+      console.error('Error in register route:', error); 
+      res.status(500).send("An error occurred during registration."); 
+    }); 
+  }); 
+
+
 /**
  * @swagger
  * /login:
  *   post:
- *     summary:  Admin Login
- *     description: Logs in a admin.
+ *     summary:  User Login
+ *     description: User Authentication.
  *     tags:
  *       - Authentication
- *     parameters:
- *       - name: username
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         in: formData
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: Copy and navigate to this link https://https://isgroup18.azurewebsites.net/login
+ *     requestbody:
+ *       required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: User's username
+                password:
+                  type: string
+                  description: User's password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              example:
+                token: "your_access_token"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: "Invalid credentials"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                error: "An error occurred during login"
  */
 
 // Login route 
@@ -202,6 +280,37 @@ app.post('/login', (req, res) => {
     res.status(500).json({ error: 'An error occurred during login', details: error.message });
   }); 
 }); 
+
+/**
+ * @swagger
+ * /loginadmin:
+ *   post:
+ *     summary: Admin
+ *     description: Login Admin Page
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       201:
+ *         description: Provide Message
+ *        content:
+            application/json:
+              example:
+                message: "Copy and navigate to this link "
+ */
+
+
+app.post('/loginadmin', (req, res) => {
+    const { username, password } = req.body;
+  
+    // Dummy authentication (replace with a proper authentication system)
+    const adminsCollection = admins.find((admin) => admin.username === username && admin.password === password);
+  
+    if (user) {
+      res.send(`Welcome, ${username}!`);
+    } else {
+      res.send('Invalid username or password.');
+    }
+  });
 
 /**
  * @swagger
