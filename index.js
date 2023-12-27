@@ -245,6 +245,8 @@ app.post('/login', (req, res) => {
 *  /visitorData:
 *    post:
 *      summary: Create a visitor
+ *     tags:
+ *       - Visitors
 *      security:
 *        - bearerAuth: []
 *      requestBody:
