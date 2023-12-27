@@ -126,45 +126,6 @@ function register(reqUsername, reqPassword, reqName, reqEmail) {
       return "An error occurred during registration."; 
     }); 
 } 
-// function login(reqUsername, reqPassword) { 
-//   return adminsCollection.findOne({ username: reqUsername, password: reqPassword }) 
-//     .then(matchAdmins => { 
-//       if (!matchAdmins) { 
-//         return { 
-//           success: false, 
-//           message: "Admin not found!" 
-//         }; 
-//       } else { 
-//         return { 
-//           success: true, 
-//           users: matchAdmins
-//         }; 
-//       } 
-//     }) 
-//     .catch(error => { 
-//       console.error('Error in login:', error); 
-//       return { 
-//         success: false, 
-//         message: "An error occurred during login." 
-//       }; 
-//     }); 
-// } 
-  
-
-// function register(reqUsername, reqPassword, reqName, reqEmail) { 
-//   return adminsCollection.insertOne({ 
-//     username: reqUsername, 
-//     password: reqPassword, 
-//     name: reqName, 
-//     email: reqEmail 
-//   }) 
-//     .then(() => { 
-//       return "Registration Admin Successful!"; 
-//     }) 
-//     .catch(error => {      console.error('Error in register:', error); 
-//       return "An error occurred during registration."; 
-//     }); 
-// } 
 
 
 
