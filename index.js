@@ -148,6 +148,39 @@ function verifyToken(req, res, next) {
   }); 
 } 
  
+
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Admin Registration
+ *     description: Registers a new admin.
+ *     tags:
+ *       - V
+ *     parameters:
+ *       - name: username
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: name
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: email
+ *         in: formData
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Registration of new admin is successfully.
+ *       500:
+ *         description: An error occurred during registration.
+ */
+
  
 // Register route 
 app.post('/register', (req, res) => { 
@@ -166,42 +199,26 @@ app.post('/register', (req, res) => {
  * @swagger
  * /login:
  *   post:
- *     summary:  User Login
- *     description: User Authentication.
+ *     summary:  Admin Login
+ *     description: Logs in a admin.
  *     tags:
  *       - Authentication
- *     requestbody:
- *       required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  description: User's username
-                password:
-                  type: string
-                  description: User's password
-      responses:
-        '200':
-          description: Successful login
-          content:
-            application/json:
-              example:
-                token: "your_access_token"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              example:
-                error: "Invalid credentials"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              example:
-                error: "An error occurred during login"
+ *     parameters:
+ *       - name: username
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         in: formData
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Login successfully.
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal Server Error
  */
 
 // Login route 
