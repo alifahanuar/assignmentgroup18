@@ -238,71 +238,90 @@ app.post('/login', (req, res) => {
   }); 
 }); 
 
-/**
- * @swagger
- * /visitorData:
- *   post:
- *     summary: Create a visitor
- *     description: Create a New Visitor
- *     tags:
- *       - Visitors
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         description: Bearer token for authentication
- *         schema:
- *           type: string
- *       - name: visitorname
- *         in: formData
- *         required: true
- *         type: string
- *       - name: phoneNumber
- *         in: formData
- *         required: true
- *         type: string
- *       - name: age
- *         in: formData
- *         required: true
- *         type: string
- *       - name: gender
- *         in: formData
- *         required: true
- *         type: string
-  *       - name: visitingPurpose
- *         in: formData
- *         required: true
- *         type: string
- *       - name: visitingPerson
- *         in: formData
- *         required: true
- *         type: string
- *       - name: visitedDate
- *         in: formData
- *         required: true
- *         type: string
- *       - name: timeIn
- *         in: formData
- *         required: true
- *         type: string
-*       - name: timeOut
- *         in: formData
- *         required: true
- *         type: string
- *     responses:
- *       201:
- *         description: Visitor record created successfully.
- *       401:
- *         description: Invalid token
- *       500:
- *         description: An error occurred while creating the visitor record
- */ 
 
+/**
+* @swagger
+* paths:
+*  /visitorData:
+*    post:
+*      summary: Create a visitor
+*      security:
+*        - bearerAuth: []
+*      requestBody:
+*        content:
+*          application/json:
+*            schema:
+*              type: object
+*              properties:
+*                visitorID:
+*                  type: string
+*                visitorName:
+*                  type: string
+*                age:
+*                  type: integer
+*                gender:
+*                  type: string
+*                phoneNumber:
+*                  type: string
+*                visitingPurpose:
+*                  type: string
+*                visitingPerson:
+*                  type: string
+*                visitedDate:
+*                  type: string
+*                  format: date
+*                timeIn:
+*                  type: string
+*                  format: time
+*                timeOut:
+*                  type: string
+*                  format: time
+*                vehicleType:
+*                  type: string
+*      responses:
+*       '200':
+*          description: Successful operation
+*          content:
+*            application/json:
+*              schema:
+*                type: object
+*                properties:
+*                  visitorID:
+*                    type: string
+*                  visitorName:
+*                    type: string
+*                  age:
+*                    type: integer
+*                  gender:
+*                    type: string
+*                  phoneNumber:
+*                    type: string
+*                  visitingPurpose:
+*                    type: string
+*                  visitingPerson:
+*                   type: string
+*                  visitedDate:
+*                    type: string
+*                    format: date
+*                 timeIn:
+*                    type: string
+*                    format: time
+*                  timeOut:
+*                    type: string
+*                    format: time
+*                  vehicleType:
+*                    type: string
+*        '500':
+*          description: An error occurred while creating the visitor
+*          content:
+*            text/plain:
+*              example: An error occurred while creating the visitor
+*/
  //Create a visitor 
 app.post('/visitorData', verifyToken, (req, res) => { 
   const { 
     visitorID, 
-    visitorName, 
+   visitorName, 
     age,
     gender,
     phoneNumber, 
@@ -326,9 +345,9 @@ app.post('/visitorData', verifyToken, (req, res) => {
     timeOut, 
     vehicleType 
   }; 
-  visitorsCollection 
+ visitorsCollection 
     .insertOne(visitorData) 
-    .then(() => { 
+   .then(() => { 
       res.send(visitorData); 
     }) 
     .catch((error) => { 
