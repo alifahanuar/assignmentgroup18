@@ -7,14 +7,10 @@ const port = process.env.PORT || 1999;
 const jwt = require('jsonwebtoken'); 
 const MongoURI = process.env.MONGODB_URI
 const bodyParser = require('body-parser');
-const ejs = require('ejs');
+const cors = require('cors');
+// const ejs = require('ejs');
 
 app.use(express.json()); 
-
-// Set up middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-
 
 // Swagger options
 const options = {
@@ -48,21 +44,11 @@ const options = {
   };
   
   const swaggerSpec = swaggerJSDoc(options);
-
-  // Dummy user data (replace with a proper authentication system)
-const admins = [
-    { username: 'user1', password: 'password1' },
-  ];
-  
-  
-
-  
-  // Serve Swagger documentation
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // MongoDB connection URL 
-const uri = 
-'mongodb+srv://alfhanuar:AwiVGJjZJAW5vaFc@cluster0.y7nkbk7.mongodb.net/VisitorManagement'; 
+const uri = 'mongodb+srv://alfhanuar:AwiVGJjZJAW5vaFc@cluster0.y7nkbk7.mongodb.net/VisitorManagement'; 
+
 // Create a new MongoClient 
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }); 
@@ -79,6 +65,7 @@ console.error('Error connecting to MongoDB:', error);
 const db = client.db('VisitorManagement'); 
 // const usersCollection = db.collection('users'); 
 const visitorsCollection = db.collection('visitors'); 
+const usersCollection = db.collection('users'); 
 const securityCollection = db.collection('security'); 
 const hostelCollection = db.collection('hostel'); 
 const blockCollection = db.collection('block'); 
@@ -86,47 +73,83 @@ const vehicleCollection = db.collection('vehicle');
 const adminsCollection = db.collection('admins'); 
 const visitorPassCollection = db.collection('visitorpass');
 
+
 function login(reqUsername, reqPassword) { 
-  return adminsCollection.findOne({ username: reqUsername, password: reqPassword }) 
-    .then(matchAdmins => { 
-      if (!matchAdmins) { 
+    return usersCollection.findOne({ username: reqUsername, password: reqPassword }) 
+      .then(matchUsers => { 
+        if (!matchUsers) { 
+          return { 
+            success: false, 
+            message: "User not found!" 
+          }; 
+        } else { 
+          return { 
+            success: true, 
+            users: matchUsers
+          }; 
+        } 
+      }) 
+      .catch(error => { 
+        console.error('Error in login:', error); 
         return { 
           success: false, 
-          message: "Admin not found!" 
+          message: "An error occurred during login." 
         }; 
-      } else { 
-        return { 
-          success: true, 
-          users: matchAdmins
-        }; 
-      } 
-    }) 
-    .catch(error => { 
-      console.error('Error in login:', error); 
-      return { 
-        success: false, 
-        message: "An error occurred during login." 
-      }; 
-    }); 
-} 
+      }); 
+  } 
+    
   
+  function register(reqUsername, reqPassword, reqName, reqEmail) { 
+    return usersCollection.insertOne({ 
+      username: reqUsername, 
+      password: reqPassword, 
+      name: reqName, 
+      email: reqEmail 
+    }) 
+      .then(() => { 
+        return "Registration User Successful!"; 
+      }) 
+      .catch(error => {      console.error('Error in register:', error); 
+        return "An error occurred during registration."; 
+      }); 
+  } 
 
-function register(reqUsername, reqPassword, reqName, reqEmail) { 
+  function loginAdmins(reqUsername, reqPassword) { 
+    return adminsCollection.findOne({ username: reqUsername, password: reqPassword }) 
+      .then(matchAdmins => { 
+        if (!matchAdmins) { 
+          return { 
+            success: false, 
+            message: "Admin not found!" 
+          }; 
+        } else { 
+          return { 
+            success: true, 
+            admins: matchAdmins
+          }; 
+        } 
+      }) 
+      .catch(error => { 
+        console.error('Error in login:', error); 
+        return { 
+          success: false, 
+          message: "An error occurred during login." 
+        }; 
+      }); 
+  }  
+
+function registerAdmins(reqUsername, reqPassword) { 
   return adminsCollection.insertOne({ 
     username: reqUsername, 
     password: reqPassword, 
-    name: reqName, 
-    email: reqEmail 
   }) 
     .then(() => { 
       return "Registration Admin Successful!"; 
     }) 
-    .catch(error => {      console.error('Error in register:', error); 
+    .catch(error => { console.error('Error in register:', error); 
       return "An error occurred during registration."; 
     }); 
 } 
-
-
 
 function generateToken(userData) { 
   const token = jwt.sign(userData, 'inipassword'); 
@@ -147,39 +170,6 @@ function verifyToken(req, res, next) {
   }); 
 } 
  
-
-/**
- * @swagger
- * /register:
- *   post:
- *     summary: Admin Registration
- *     description: Registers a new admin.
- *     tags:
- *       - Administrator
- *     parameters:
- *       - name: username
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         in: formData
- *         required: true
- *         type: string
- *       - name: name
- *         in: formData
- *         required: true
- *         type: string
- *       - name: email
- *         in: formData
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: Registration of new admin is successfully.
- *       500:
- *         description: An error occurred during registration.
- */
-
  
 // Register route 
 app.post('/register', (req, res) => { 
@@ -194,30 +184,47 @@ app.post('/register', (req, res) => {
   }); 
 }); 
 
+// Register route 
+app.post('/registeradmin', (req, res) => { 
+    console.log(req.body); 
+   
+    let result = registerAdmins(req.body.username, req.body.password); 
+    result.then(response => { 
+      res.send(response); 
+    }).catch(error => { 
+      console.error('Error in register route:', error); 
+      res.status(500).send("An error occurred during registration."); 
+    }); 
+  }); 
+
 /**
  * @swagger
  * /login:
  *   post:
- *     summary:  Admin Login
- *     description: Logs in a admin.
+ *     summary:  User Login
+ *     description: User Authentication.
  *     tags:
- *       - Administrator
+ *       - Authentication
  *     parameters:
  *       - name: username
- *         in: formData
+ *         in: query
  *         required: true
  *         type: string
  *       - name: password
- *         in: formData
+ *         in: query
  *         required: true
  *         type: string
  *     responses:
- *       200:
- *         description: Login successfully.
- *       401:
- *         description: Invalid credentials
- *       500:
- *         description: Internal Server Error
+ *       '200':
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             example:
+ *               token: "your_access_token"
+ *       '401':
+ *         description: Unauthorized
+ *       '500':
+ *         description: "An error occurred during login"
  */
 
 // Login route 
@@ -238,92 +245,134 @@ app.post('/login', (req, res) => {
   }); 
 }); 
 
+// Set up middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+
+// Dummy user data (replace with a proper authentication system)
+const users = [
+  { username: 'user1', password: 'password1' },
+  { username: 'user2', password: 'password2' },
+];
+
+// Routes
+// app.get('/', (req, res) => {
+//   res.render('login');
+// });
 
 /**
-* @swagger
-* paths:
-*  /visitorData:
-*    post:
-*      summary: Create a visitor
+ * @swagger
+ * /loginadmin:
+ *   get:
+ *     summary: Admin Login
+ *     description: Authenticate and log in an administrator.
  *     tags:
- *       - Visitors
-*      security:
-*        - bearerAuth: []
-*      requestBody:
-*        content:
-*          application/json:
-*            schema:
-*              type: object
-*              properties:
-*                visitorID:
-*                  type: string
-*                visitorName:
-*                  type: string
-*                age:
-*                  type: integer
-*                gender:
-*                  type: string
-*                phoneNumber:
-*                  type: string
-*                visitingPurpose:
-*                  type: string
-*                visitingPerson:
-*                  type: string
-*                visitedDate:
-*                  type: string
-*                  format: date
-*                timeIn:
-*                  type: string
-*                  format: time
-*                timeOut:
-*                  type: string
-*                  format: time
-*                vehicleType:
-*                  type: string
-*      responses:
-*       '200':
-*          description: Successful operation
-*          content:
-*            application/json:
-*              schema:
-*                type: object
-*                properties:
-*                  visitorID:
-*                    type: string
-*                  visitorName:
-*                    type: string
-*                  age:
-*                    type: integer
-*                  gender:
-*                    type: string
-*                  phoneNumber:
-*                    type: string
-*                  visitingPurpose:
-*                    type: string
-*                  visitingPerson:
-*                   type: string
-*                  visitedDate:
-*                    type: string
-*                    format: date
-*                 timeIn:
-*                    type: string
-*                    format: time
-*                  timeOut:
-*                    type: string
-*                    format: time
-*                  vehicleType:
-*                    type: string
-*        '500':
-*          description: An error occurred while creating the visitor
-*          content:
-*            text/plain:
-*              example: An error occurred while creating the visitor
-*/
+ *       - Authentication
+*     parameters:
+ *       - name: username
+ *         in: query
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         in: query
+ *         required: true
+ *         type: string
+ *     responses:
+ *       '200':
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             example:
+ *               token: "your_access_token"
+ *       '401':
+ *         description: Unauthorized
+ *       '500':
+ *         description: "An error occurred during login"
+ */
+app.get('/loginadmin', (req, res) => {
+    const { username, password } = req.body;
+    loginAdmins(username, password)
+    .then(response => {
+        if (response.success) {
+            // If authentication is successful, you can generate a token or send a success message
+            res.send('Admin logged in successfully');
+        } else {
+            // If authentication fails, send an appropriate response
+            res.status(401).send(response.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error during admin login:', error);
+        res.status(500).send('Error during admin login');
+    });
+});
+
+
+/**
+ * @swagger
+ * /visitorData:
+ *   post:
+ *     summary: Create a visitor
+ *     description: Create a New Visitor
+ *     tags:
+ *       - Visitors Management
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         description: Bearer token for authentication
+ *         schema:
+ *           type: string
+ *       - name: visitorname
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: phoneNumber
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: age
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: gender
+ *         in: formData
+ *         required: true
+ *         type: string
+  *       - name: visitingPurpose
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: visitingPerson
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: visitedDate
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: timeIn
+ *         in: formData
+ *         required: true
+ *         type: string
+*       - name: timeOut
+ *         in: formData
+ *         required: true
+ *         type: string
+ *     responses:
+ *       201:
+ *         description: Visitor record created successfully.
+ *       401:
+ *         description: Invalid token
+ *       500:
+ *         description: An error occurred while creating the visitor record
+ */ 
+
  //Create a visitor 
 app.post('/visitorData', verifyToken, (req, res) => { 
   const { 
     visitorID, 
-   visitorName, 
+    visitorName, 
     age,
     gender,
     phoneNumber, 
@@ -347,9 +396,9 @@ app.post('/visitorData', verifyToken, (req, res) => {
     timeOut, 
     vehicleType 
   }; 
- visitorsCollection 
+  visitorsCollection 
     .insertOne(visitorData) 
-   .then(() => { 
+    .then(() => { 
       res.send(visitorData); 
     }) 
     .catch((error) => { 
@@ -365,16 +414,8 @@ app.post('/visitorData', verifyToken, (req, res) => {
  *     summary: Issue a visitor pass
  *     description: To issue a visitor pass.
  *     tags:
- *       - Visitor Pass
- *     security:
- *       - bearerAuth: []
+ *       - Administrator Management
  *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         description: Bearer token for authentication
- *         schema:
- *           type: string
  *       - in: path
  *         name: _id
  *         required: true
@@ -383,7 +424,6 @@ app.post('/visitorData', verifyToken, (req, res) => {
  *     requestBody:
  *       description: Visitor pass details
  *       required: true
- 
  *       content:
  *         application/json:
  *           schema:
@@ -432,43 +472,58 @@ app.post('/issuepass', verifyToken, async (req, res) => {
  * @swagger
  * /retrievepass/{_id}:
  *   get:
- *     summary: Retrieve a visitor pass
- *     description: To retrieve details of a visitor pass.
+ *     summary: Retrieve visitor pass by ID
  *     tags:
- *       - Visitor Pass
+ *       - Visitors Management
  *     parameters:
  *       - in: path
  *         name: _id
  *         required: true
+ *         description: ID of the visitor pass to retrieve
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Visitor pass retrieved successfully
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: "12345"
+ *               issuedBy: "Admin123"
+ *               validUntil: "2024-12-31"
+ *               issuedAt: "2024-01-06T12:00:00Z"
  *       404:
- *         description: Visitor pass not found
+ *         description: No pass found for the given visitor
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "No pass found for this visitor"
  *       500:
- *         description: An error occurred while retrieving the pass
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "An error occurred while retrieving the pass"
+ *               details: "Internal server error details"
  */
 
-  // Visitor Retrieve Pass
-  app.get('/retrievepass/:_id', async (req, res) => {
-    const _Id = req.params._Id;
-  
-    try {
-      const visitorPass = db.collection('visitorpass');
-      const pass = await visitorPass.findOne({ _Id });
-  
-      if (!pass) {
-        return res.status(404).json({ error: 'No pass found for this visitor' });
-      }
-  
-      res.json(pass);
-    } catch (error) {
-      console.error('Retrieve Pass Error:', error.message);
-      res.status(500).json({ error: 'An error occurred while retrieving the pass', details: error.message });
+app.get('/retrievepass/:_id', async (req, res) => {
+  const _Id = req.params._id;
+
+  try {
+    const visitorPass = db.collection('visitorpass');
+    const pass = await visitorPass.findOne({ _id });
+
+    if (!pass) {
+      return res.status(404).json({ error: 'No pass found for this visitor' });
     }
-  });
+
+    res.json(pass);
+  } catch (error) {
+    console.error('Retrieve Pass Error:', error.message);
+    res.status(500).json({ error: 'An error occurred while retrieving the pass', details: error.message });
+  }
+});
 
 /**
  * @swagger
@@ -477,7 +532,7 @@ app.post('/issuepass', verifyToken, async (req, res) => {
  *     summary: Update a visitor
  *     description: To update details of a visitor.
  *     tags:
- *       - Visitors
+ *       - Administrator Management
  *     parameters:
  *       - in: path
  *         name: id
@@ -571,7 +626,7 @@ visitorData });
  *     summary: Delete a visitor
  *     description: Use this route to delete a visitor by its ID.
  *     tags:
- *       - Visitors
+ *       - Administrator Management
  *     parameters:
  *       - in: path
  *         name: id
@@ -614,7 +669,7 @@ app.delete('/visitor/:id', verifyToken, async (req, res) => {
  *     summary: Get all visitors
  *     description: To retrieve a list of all visitors.
  *     tags:
- *       - Visitors
+ *       - Administrator Management
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -750,7 +805,8 @@ app.get('/vehicle', async (req, res) => {
  
 
 app.use(express.json()) 
- 
+app.use(cors({origin: ['http://localhost:yourLocalPort', 'https://isgroup18.azurewebsites.net'],
+credentials: true,})); 
  
 // Start the server 
 app.listen(port, () => { 

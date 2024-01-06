@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {
 "username": "admin",
-"password": "12345",
+"password": "admin1234",
 "name": "admin",
 "email": "admin@gmail.com"
 }
@@ -30,12 +30,11 @@ Content-Type: application/json
 }
 
 ###LOGIN ADMIN###
-GET  http://localhost:1999/loginadmin
-Content-Type: application/json
+GET http://localhost:1999/loginadmin
 
 {
 "username": "admin",
-"password": "12345"
+"password": "12345",
 }
 
 ###Create a visitor###
