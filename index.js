@@ -170,6 +170,52 @@ function verifyToken(req, res, next) {
   }); 
 } 
  
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Register a new user
+ *     description: Register a new user with the provided credentials.
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username for the new user.
+ *                 example: john_doe
+ *               password:
+ *                 type: string
+ *                 description: The password for the new user.
+ *                 example: password123
+ *               name:
+ *                 type: string
+ *                 description: The name of the new user.
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the new user.
+ *                 example: john.doe@example.com
+ *     responses:
+ *       '200':
+ *         description: Registration successful.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Registration User Successful!
+ *       '500':
+ *         description: An error occurred during registration.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: An error occurred during registration.
+ */
  
 // Register route 
 app.post('/register', (req, res) => { 
