@@ -47,7 +47,7 @@ const options = {
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // MongoDB connection URL 
-const uri = 'mongodb+srv://alfhanuar:AwiVGJjZJAW5vaFc@cluster0.y7nkbk7.mongodb.net/VisitorManagement'; 
+const uri = 'mongodb+srv://alfhanuar:AwiVGJjZJAW5vaFc@cluster0.y7nkbk7.mongodb.net/VisitorManagement';  //attack surface
 
 // Create a new MongoClient 
 
@@ -215,6 +215,37 @@ app.post('/register', (req, res) => {
   }); 
 }); 
 
+/**
+ * @swagger
+ * /registeradmin:
+ *   post:
+ *     summary: Register a new admin
+ *     description: Register a new user with the provided credentials.
+ *     tags:
+ *       - Authentication 
+ *     parameters:
+ *       - name: username
+ *         in: query
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         in: query
+ *         required: true
+ *         type: string
+ *     responses:
+ *       '200':
+ *         description: Registration successful.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Registration Admin Successful!
+ *       '500':
+ *         description: An error occurred during registration.
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: An error occurred during registration.
+ */
 // Register route 
 app.post('/registeradmin', (req, res) => { 
     console.log(req.body); 
@@ -235,7 +266,7 @@ app.post('/registeradmin', (req, res) => {
  *     summary:  User Login
  *     description: User Authentication.
  *     tags:
- *       - Authentication
+ *       - Login
  *     parameters:
  *       - name: username
  *         in: query
@@ -298,7 +329,7 @@ const users = [
  *     summary: Admin Login
  *     description: Authenticate and log in an administrator.
  *     tags:
- *       - Authentication
+ *       - Login
 *     parameters:
  *       - name: username
  *         in: query
@@ -347,49 +378,35 @@ app.get('/loginadmin', (req, res) => {
  *     description: Create a New Visitor
  *     tags:
  *       - Visitors Management
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         description: Bearer token for authentication
- *         schema:
- *           type: string
- *       - name: visitorname
- *         in: formData
- *         required: true
- *         type: string
- *       - name: phoneNumber
- *         in: formData
- *         required: true
- *         type: string
- *       - name: age
- *         in: formData
- *         required: true
- *         type: string
- *       - name: gender
- *         in: formData
- *         required: true
- *         type: string
-  *       - name: visitingPurpose
- *         in: formData
- *         required: true
- *         type: string
- *       - name: visitingPerson
- *         in: formData
- *         required: true
- *         type: string
- *       - name: visitedDate
- *         in: formData
- *         required: true
- *         type: string
- *       - name: timeIn
- *         in: formData
- *         required: true
- *         type: string
-*       - name: timeOut
- *         in: formData
- *         required: true
- *         type: string
+ *     requestBody:
+ *       description: Create a visitor
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               visitorName:
+ *                 type: string
+ *               age:
+ *                 type: string
+ *               gender:
+ *                 type: string
+ *               phoneNumber:
+ *                 type: string
+ *               visitingPurpose:
+ *                 type: string 
+ *               visiteddate:
+ *                 type: string 
+ *               timeIn:
+ *                 type: string
+ *                 format: date
+ *               timeOut:
+ *                 type: string
+ *                 format: date 
+ *               vechicleType:
+ *                 type: string
+ *                
  *     responses:
  *       201:
  *         description: Visitor record created successfully.

@@ -44,10 +44,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NThiYWIxO
 
 {
 "visitorID": "V11",
-"visitorName": "aisyah",
+"visitorName": "firdaus",
 "phoneNumber": "0132457286",
 "age": "23",
-"gender": "female",
+"gender": "male",
 "visitingPurpose": "Visit Friends",
 "visitingPerson": "Alifah",
 "visitedDate": "2023/06/5",
