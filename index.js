@@ -465,12 +465,6 @@ app.post('/visitorData', verifyToken, (req, res) => {
  *     description: To issue a visitor pass.
  *     tags:
  *       - Administrator Management
- *     parameters:
- *       - in: path
- *         name: _id
- *         required: true
- *         schema:
- *           type: string
  *     requestBody:
  *       description: Visitor pass details
  *       required: true
