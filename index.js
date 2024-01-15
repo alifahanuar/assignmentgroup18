@@ -386,6 +386,8 @@ app.get('/loginadmin', (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               visitorID:
+ *                 type: string 
  *               visitorName:
  *                 type: string
  *               age:
