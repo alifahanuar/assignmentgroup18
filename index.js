@@ -577,48 +577,36 @@ app.get('/retrievepass/:_id', async (req, res) => {
  *     description: To update details of a visitor.
  *     tags:
  *       - Administrator Management
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *       - name: visitorname
- *         in: formData
- *         required: true
- *         type: string
- *       - name: phoneNumber
- *         in: formData
- *         required: true
- *         type: string
- *       - name: age
- *         in: formData
- *         required: true
- *         type: string
- *       - name: gender
- *         in: formData
- *         required: true
- *         type: string
- *       - name: visitingPurpose
- *         in: formData
- *         required: true
- *         type: string
- *       - name: visitingPerson
- *         in: formData
- *         required: true
- *         type: string
- *       - name: visitedDate
- *         in: formData
- *         required: true
- *         type: string
- *       - name: timeIn
- *         in: formData
- *         required: true
- *         type: string
- *       - name: timeOut
- *         in: formData
- *         required: true
- *         type: string 
+ *     requestBody:
+ *       description: Create a visitor
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               visitorID:
+ *                 type: string 
+ *               visitorName:
+ *                 type: string
+ *               age:
+ *                 type: string
+ *               gender:
+ *                 type: string
+ *               phoneNumber:
+ *                 type: string
+ *               visitingPurpose:
+ *                 type: string 
+ *               visiteddate:
+ *                 type: string 
+ *               timeIn:
+ *                 type: string
+ *                 format: date
+ *               timeOut:
+ *                 type: string
+ *                 format: date 
+ *               vechicleType:
+ *                 type: string
  *     requestBody:
  *       description: Visitor data to update
  *       required: true
