@@ -69,12 +69,12 @@ Authorization: Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NThiMDQ0
 }
 
 ###RETRIEVE PASS###    //_id
-GET http://localhost:1999/retrievepass/658b05f832b98b458ffe17de
+GET http://localhost:1999/retrievepass/658b063ab67fb6bc284fb1ea
 
 
 
 ###Delete a visitor###
-DELETE http://localhost:1999/visitor/65894f469fe4fd9f11d4c438
+DELETE http://localhost:1999/visitor/65a5400186a3de24b58322ab
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTg4NGNiZTllYTU1ZTk3MjY4ZTE4YzUiLCJ1c2VybmFtZSI6IlN5bGFyIiwicGFzc3dvcmQiOiIxMjM0NSIsIm5hbWUiOiJTeWxhciAiLCJlbWFpbCI6ImFsaWZhaEBnbWFpbC5jb20iLCJpYXQiOjE3MDM0MzEzNjB9.3GfEy1oCzWFagEx7uFG8xOzBdZFEWyCEcmtVQbJ-3wc
 
 ###View all visitors###
